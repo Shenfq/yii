@@ -1,0 +1,37 @@
+{
+  "name": "noo",
+  "version": "1.0.0",
+  "description": "Node server framework like Yii2, based on koa.",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "nodemon",
+    "start": "cross-env NODE_ENV=development DEBUG=* ts-node ./demo/app.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Shenfq/Noo.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Shenfq/Noo/issues"
+  },
+  "homepage": "https://github.com/Shenfq/Noo#readme",
+  "dependencies": {
+    "@types/koa": "^2.0.44",
+    "@types/koa-bodyparser": "^4.2.0",
+    "@types/koa-router": "^7.0.27",
+    "debug": "^3.1.0",
+    "koa": "^2.5.0",
+    "koa-bodyparser": "^4.2.0",
+    "koa-router": "^7.4.0"
+  },
+  "devDependencies": {
+    "cross-env": "^5.1.4",
+    "nodemon": "^1.17.1",
+    "ts-node": "^5.0.1",
+    "typescript": "^2.7.2"
+  }
+}
