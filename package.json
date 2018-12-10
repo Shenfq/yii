@@ -2,7 +2,7 @@
   "name": "noo",
   "version": "1.0.0",
   "description": "Node server framework like Yii2, based on koa.",
-  "main": "dist/index.js",
+  "main": "dist/lib/index.js",
   "scripts": {
     "build": "tsc",
     "dev": "nodemon",

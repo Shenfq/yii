@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const src_1 = require("../../src");
-class User extends src_1.BaseController {
+const lib_1 = require("../../lib");
+class User extends lib_1.BaseController {
     async before() {
         super.before();
         console.log('user load before');

@@ -1,4 +1,4 @@
-import Noo from '../src'
+import Noo from '../lib'
 
 const noo = new Noo({
   name: 'demo',

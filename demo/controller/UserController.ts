@@ -1,4 +1,4 @@
-import { BaseController } from '../../src'
+import { BaseController } from '../../lib'
 
 export default class User extends BaseController {
 
