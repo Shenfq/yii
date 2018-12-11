@@ -1,22 +1,16 @@
 import { BaseContext } from 'koa'
-import Noo from '../core'
+import BaseClass from './base'
 
-export class BaseController {
-  ctx: BaseContext
-  app: Noo
-  config: any
-
+export class BaseController extends BaseClass {
   constructor (ctx: BaseContext) {
-    this.ctx = ctx
-    this.app = ctx.app
-    this.config = ctx.app.config
+    super(ctx)
   }
 
   async before() {
-    console.log('load before')
+    console.log('load controller before')
   }
 
   async after() {
-    console.log('load after')
+    console.log('load controller after')
   }
 }

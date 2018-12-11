@@ -4,7 +4,7 @@ const lib_1 = require("../../lib");
 class User extends lib_1.BaseController {
     async before() {
         super.before();
-        console.log('user load before');
+        console.log('load user controller before');
     }
     async actionEnv() {
         this.ctx.body = this.config.env;

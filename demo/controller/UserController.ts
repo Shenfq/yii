@@ -4,7 +4,7 @@ export default class User extends BaseController {
 
   async before () {
     super.before()
-    console.log('user load before')
+    console.log('load user controller before')
   }
 
   async actionEnv() {

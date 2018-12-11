@@ -1,16 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-class BaseController {
+const base_1 = require("./base");
+class BaseController extends base_1.default {
     constructor(ctx) {
-        this.ctx = ctx;
-        this.app = ctx.app;
-        this.config = ctx.app.config;
+        super(ctx);
     }
     async before() {
-        console.log('load before');
+        console.log('load controller before');
     }
     async after() {
-        console.log('load after');
+        console.log('load controller after');
     }
 }
 exports.BaseController = BaseController;
