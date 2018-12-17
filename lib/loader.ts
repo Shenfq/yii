@@ -25,6 +25,7 @@ export class Loader {
   private router: any = new Router
   private controller: Array<FileModule> = []
   private service: Array<FileModule> = []
+  private middleware: Array<FileModule> = []
   private app: Noo
   get appDir() {
     const Idx = __dirname.indexOf('node_module')
@@ -48,12 +49,13 @@ export class Loader {
 
   // loader的主逻辑
   load() {
-    // 优先加载配置
+    // 加载中间件
+    this.loadMiddleware()
+    // 加载配置
     this.loadConfig()
     // load控制器之后，依据控制器定义的方法生成路由
     this.loadController()
     this.loadRouter()
-
     this.loadService()
     // TODO: load others
     // this.loadComponent()
@@ -163,6 +165,30 @@ export class Loader {
   }
 
   loadComponent() {
+
+  }
+
+
+  defaulMiddleware() {
+    const Static = require('koa-static')
+    const bodyParser = require('koa-bodyparser')
+    this.app.use(Static(path.join(this.appDir, this.app.name, this.app.static)))
+    this.app.use(bodyParser())
+  }
+
+  loadMiddleware() {
+    this.defaulMiddleware()
+    this.middleware = this.getFiles('middleware')
+    const middlewareFiles = this.middleware
+    middlewareFiles.forEach((file: FileModule) => {
+      const { module, filename } = file
+      const [name, suffix] = filename.split('.')
+      if (suffix !== 'ts' && suffix !== 'js') {
+        //非ts或js文件
+        return false
+      }
+      this.app.use(module)
+    })
 
   }
 }
