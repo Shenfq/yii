@@ -3,6 +3,7 @@ import * as path from 'path'
 import * as Router from 'koa-router'
 import { BaseContext } from 'koa'
 import Noo from './core'
+import { action } from './router'
 
 const CACHED = Symbol.for('cached')
 
@@ -66,6 +67,7 @@ export class Loader {
   }
 
   loadRouter() {
+    console.log(action.getRoutes())
     this.controller.forEach((file: FileModule) => {
       const { module: Controller, filename } = file
       const [name, suffix] = filename.split('.')

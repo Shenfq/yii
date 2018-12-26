@@ -8,9 +8,9 @@ interface Options {
 }
 
 export default class Noo extends Koa {
-  public config: any = {}
-  public name: string = 'app'
-  public static: string = 'public'
+  config: any = {}
+  name: string = 'app'
+  static: string = 'public'
   private port: number = 3000
   private loader: Loader
 

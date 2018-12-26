@@ -1,4 +1,4 @@
-import { BaseController } from '../../lib'
+import { BaseController, Action } from '../../lib'
 
 export default class User extends BaseController {
 
@@ -7,10 +7,12 @@ export default class User extends BaseController {
     console.log('load user controller before')
   }
 
+  @Action.get
   async actionEnv() {
     this.ctx.body = this.config.env
   }
 
+  @Action.post
   async actionUser() {
     this.ctx.body = 'hello user'
   }
