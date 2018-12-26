@@ -1,3 +1,27 @@
+// import { BaseContext } from 'koa'
+export interface RouteModule {
+  method: string,
+  name: string,
+  property: string,
+  constructor: any
+}
+interface Decorator {
+  (target: any, property: string): void
+}
+interface RoutesModule {
+  [key: string]: RouteModule
+}
+interface Router {
+  all: Decorator
+  get: Decorator
+  post: Decorator
+  patch: Decorator
+  del: Decorator
+  delete: Decorator
+  options: Decorator
+  put: Decorator,
+  Routes: RoutesModule
+}
 const Methods = [
   'HEAD',
   'OPTIONS',
@@ -7,11 +31,11 @@ const Methods = [
   'POST',
   'DELETE'
 ]
-
+Methods.push('ALL')
 class Action {
-  private routes: any = {};
+  private routes: RoutesModule = {};
 
-  getRoutes() {
+  get Routes() {
     return this.routes
   }
 
@@ -24,28 +48,30 @@ class Action {
         return '-' + char.toLowerCase()
       })
   }
+
 }
 
 Methods.forEach(method => {
   method = method.toLowerCase()
   Object.defineProperty(Action.prototype, method.toLowerCase(), {
     get: function () {
-      return (target: any, propertyKey: string) => {
+      return (target: any, property: string) => {
         const constructor = target.constructor
         const name = this.transformName(constructor.name)
-        const obj = {
-          method,
+        const route: RouteModule = {
           constructor,
-          property: this.transformName(propertyKey)
+          property,
+          method,
+          name: this.transformName(property)
         }
         if (Array.isArray(this.routes[name])) {
-          this.routes[name].push(obj)
+          this.routes[name].push(route)
         } else {
-          this.routes[name] = [obj]
+          this.routes[name] = [route]
         }
       }
     }
   })
 })
 
-export const action = new Action
+export const action: Router = <any> new Action

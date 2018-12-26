@@ -8,16 +8,17 @@ export default class User extends BaseController {
   }
 
   @Action.get
-  async actionEnv() {
+  async env() {
     this.ctx.body = this.config.env
   }
 
-  @Action.post
-  async actionUser() {
+  @Action.all
+  async user() {
     this.ctx.body = 'hello user'
   }
 
-  async actionUserInfo() {
+  @Action.get
+  async UserInfo() {
     this.ctx.body = 'hello userinfo'
   }
 

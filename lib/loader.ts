@@ -3,19 +3,9 @@ import * as path from 'path'
 import * as Router from 'koa-router'
 import { BaseContext } from 'koa'
 import Noo from './core'
-import { action } from './router'
+import { action, RouteModule } from './router'
 
 const CACHED = Symbol.for('cached')
-
-function transformName (name: string): string {
-  return name
-  .replace(/^[A-Z]/, (char: string): string => {
-    return char.toLowerCase()
-  })
-  .replace(/([A-Z])/g, (char: string): string => {
-    return '-' + char.toLowerCase()
-  })
-}
 
 interface FileModule {
   module: any,
@@ -58,7 +48,7 @@ export class Loader {
     this.loadController()
     this.loadRouter()
     this.loadService()
-    // TODO: load others
+    // TODO: loadComponent
     // this.loadComponent()
   }
 
@@ -67,38 +57,21 @@ export class Loader {
   }
 
   loadRouter() {
-    console.log(action.getRoutes())
-    this.controller.forEach((file: FileModule) => {
-      const { module: Controller, filename } = file
-      const [name, suffix] = filename.split('.')
-      const controllerName = name.slice(0, name.indexOf('Controller'))
-
-      if (suffix !== 'ts' && suffix !== 'js') {
-        //非controller文件
-        return false
-      }
-
-      const actions = new Router
-      const proto = Controller.prototype
-      Object.getOwnPropertyNames(proto)
-      .forEach(method => {
-
-        const name = (method.split('action') || ['', ''])[1]
-
-        if (method === 'constructor' || !name)  return
-        // 监听所有请求方法
-        // TODO: 后续修改成装饰器
-        actions.all('/' + transformName(name), async (ctx: BaseContext) => {
-          const instance = new Controller(ctx)
+    const Routes = action.Routes
+    for (let controllerName in Routes) {
+      const router:any = new Router
+      const Actions: any = Routes[controllerName]
+      Actions.forEach((route: RouteModule) => {
+        const { method, constructor, property, name } = route
+        router[method]('/' + name, async (ctx: BaseContext) => {
+          const instance = new constructor(ctx)
           instance.before && instance.before(ctx)
-          instance[method] && instance[method](ctx)
+          instance[property] && instance[property](ctx)
           instance.after && instance.after(ctx)
         })
-
       })
-      // 使用控制器名添加路由前缀
-      this.router.use('/' + transformName(controllerName), actions.routes(), actions.allowedMethods())
-    })
+      this.router.use('/' + controllerName, router.routes(), router.allowedMethods())
+    }
 
     this.app.use(this.router.routes())
   }
@@ -184,7 +157,7 @@ export class Loader {
     const middlewareFiles = this.middleware
     middlewareFiles.forEach((file: FileModule) => {
       const { module, filename } = file
-      const [name, suffix] = filename.split('.')
+      const suffix = filename.split('.')[1]
       if (suffix !== 'ts' && suffix !== 'js') {
         //非ts或js文件
         return false
