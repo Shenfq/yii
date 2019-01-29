@@ -14,9 +14,10 @@ interface FileModule {
 
 export class Loader {
   private router: any = new Router
-  private controller: Array<FileModule> = []
+  // private controller: Array<FileModule> = []
   private service: Array<FileModule> = []
   private middleware: Array<FileModule> = []
+  private component: Array<FileModule> = []
   private app: Noo
   get appDir() {
     const Idx = __dirname.indexOf('node_module')
@@ -44,16 +45,18 @@ export class Loader {
     this.loadMiddleware()
     // 加载配置
     this.loadConfig()
+    // 加载插件
+    this.loadComponent()
+    // 加载服务
+    this.loadService()
     // load控制器之后，依据控制器定义的方法生成路由
     this.loadController()
     this.loadRouter()
-    this.loadService()
-    // TODO: loadComponent
-    // this.loadComponent()
   }
 
   loadController() {
-    this.controller = this.getFiles('controller')
+    // this.controller = this.getFiles('controller')
+    return this.getFiles('controller')
   }
 
   loadRouter() {
@@ -140,7 +143,21 @@ export class Loader {
   }
 
   loadComponent() {
+    this.component = this.getFiles('component')
+    const componentFiles = this.component
 
+    componentFiles.forEach(component => {
+      const componentConfig = this.app.config.component || {}
+      const { filename, module } = component
+      const [ name ] = filename.split('.')
+      const instance = componentConfig[name]
+        ? new module(componentConfig[name])
+        : new module
+      console.log(name, componentConfig[name])
+      Object.defineProperty(this.app, name, {
+        get: () => instance
+      })
+    })
   }
 
 

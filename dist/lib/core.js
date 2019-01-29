@@ -7,9 +7,11 @@ class Noo extends Koa {
         super();
         this.config = {};
         this.name = 'app';
+        this.static = 'public';
         this.port = 3000;
-        this.name = options.name;
-        this.port = options.port;
+        this.name = options.name || this.name;
+        this.port = options.port || this.port;
+        this.static = options.static || this.static;
         this.loader = new loader_1.Loader(this);
     }
     run(port = this.port) {

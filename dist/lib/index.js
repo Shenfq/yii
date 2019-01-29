@@ -5,5 +5,7 @@ function __export(m) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __export(require("./base/controller"));
 __export(require("./base/service"));
+var router_1 = require("./router");
+exports.Action = router_1.action;
 const core_1 = require("./core");
 exports.default = core_1.default;

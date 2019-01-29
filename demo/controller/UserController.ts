@@ -7,19 +7,27 @@ export default class User extends BaseController {
     console.log('load user controller before')
   }
 
+  @Action.post
+  async env(ctx: any) {
+    const logger = (<any>this.app).logger
+    logger.info('test component')
+    ctx.body = this.config.env
+  }
+
   @Action.get
-  async env() {
-    this.ctx.body = this.config.env
+  async userService(ctx: any) {
+    const userService = ctx.service.user
+    ctx.body = userService.getName()
   }
 
   @Action.all
-  async user() {
-    this.ctx.body = 'hello user'
+  async user(ctx: any) {
+    ctx.body = 'hello user'
   }
 
   @Action.get
-  async UserInfo() {
-    this.ctx.body = 'hello userinfo'
+  async UserInfo(ctx: any) {
+    ctx.body = 'hello userinfo'
   }
 
 }

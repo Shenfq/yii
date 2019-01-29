@@ -3,21 +3,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const fs = require("fs");
 const path = require("path");
 const Router = require("koa-router");
+const router_1 = require("./router");
 const CACHED = Symbol.for('cached');
-function transformName(name) {
-    return name
-        .replace(/^[A-Z]/, (char) => {
-        return char.toLowerCase();
-    })
-        .replace(/([A-Z])/g, (char) => {
-        return '-' + char.toLowerCase();
-    });
-}
 class Loader {
     constructor(app) {
         this.router = new Router;
-        this.controller = [];
+        // private controller: Array<FileModule> = []
         this.service = [];
+        this.middleware = [];
+        this.component = [];
         this.app = app;
     }
     get appDir() {
@@ -38,46 +32,38 @@ class Loader {
     }
     // loader的主逻辑
     load() {
-        // 优先加载配置
+        // 加载中间件
+        this.loadMiddleware();
+        // 加载配置
         this.loadConfig();
+        // 加载插件
+        this.loadComponent();
+        // 加载服务
+        this.loadService();
         // load控制器之后，依据控制器定义的方法生成路由
         this.loadController();
         this.loadRouter();
-        this.loadService();
-        // TODO: load others
-        // this.loadComponent()
     }
     loadController() {
-        this.controller = this.getFiles('controller');
+        // this.controller = this.getFiles('controller')
+        return this.getFiles('controller');
     }
     loadRouter() {
-        this.controller.forEach((file) => {
-            const { module: Controller, filename } = file;
-            const [name, suffix] = filename.split('.');
-            const controllerName = name.slice(0, name.indexOf('Controller'));
-            if (suffix !== 'ts' && suffix !== 'js') {
-                //非controller文件
-                return false;
-            }
-            const actions = new Router;
-            const proto = Controller.prototype;
-            Object.getOwnPropertyNames(proto)
-                .forEach(method => {
-                const name = (method.split('action') || ['', ''])[1];
-                if (method === 'constructor' || !name)
-                    return;
-                // 监听所有请求方法
-                // TODO: 后续修改成装饰器
-                actions.all('/' + transformName(name), async (ctx) => {
-                    const instance = new Controller(ctx);
+        const Routes = router_1.action.Routes;
+        for (let controllerName in Routes) {
+            const router = new Router;
+            const Actions = Routes[controllerName];
+            Actions.forEach((route) => {
+                const { method, constructor, property, name } = route;
+                router[method]('/' + name, async (ctx) => {
+                    const instance = new constructor(ctx);
                     instance.before && instance.before(ctx);
-                    instance[method] && instance[method](ctx);
+                    instance[property] && instance[property](ctx);
                     instance.after && instance.after(ctx);
                 });
             });
-            // 使用控制器名添加路由前缀
-            this.router.use('/' + transformName(controllerName), actions.routes(), actions.allowedMethods());
-        });
+            this.router.use('/' + controllerName, router.routes(), router.allowedMethods());
+        }
         this.app.use(this.router.routes());
     }
     loadConfig() {
@@ -137,6 +123,40 @@ class Loader {
         });
     }
     loadComponent() {
+        this.component = this.getFiles('component');
+        const componentFiles = this.component;
+        componentFiles.forEach(component => {
+            const componentConfig = this.app.config.component || {};
+            const { filename, module } = component;
+            const [name] = filename.split('.');
+            const instance = componentConfig[name]
+                ? new module(componentConfig[name])
+                : new module;
+            console.log(name, componentConfig[name]);
+            Object.defineProperty(this.app, name, {
+                get: () => instance
+            });
+        });
+    }
+    defaulMiddleware() {
+        const Static = require('koa-static');
+        const bodyParser = require('koa-bodyparser');
+        this.app.use(Static(path.join(this.appDir, this.app.name, this.app.static)));
+        this.app.use(bodyParser());
+    }
+    loadMiddleware() {
+        this.defaulMiddleware();
+        this.middleware = this.getFiles('middleware');
+        const middlewareFiles = this.middleware;
+        middlewareFiles.forEach((file) => {
+            const { module, filename } = file;
+            const suffix = filename.split('.')[1];
+            if (suffix !== 'ts' && suffix !== 'js') {
+                //非ts或js文件
+                return false;
+            }
+            this.app.use(module);
+        });
     }
 }
 exports.Loader = Loader;
