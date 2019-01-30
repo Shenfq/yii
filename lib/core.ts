@@ -14,7 +14,7 @@ export default class Yii extends Koa {
   private port: number = 3000
   private loader: Loader
 
-  constructor (options: Options) {
+  constructor (options: Options = {}) {
     super()
     this.name = options.name || this.name
     this.port = options.port || this.port

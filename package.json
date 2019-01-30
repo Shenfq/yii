@@ -1,6 +1,6 @@
 {
   "name": "yii",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Node server framework like Yii2, based on koa.",
   "main": "dist/lib/index.js",
   "typings": "lib/index.ts",

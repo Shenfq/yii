@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Koa = require("koa");
 const loader_1 = require("./loader");
 class Yii extends Koa {
-    constructor(options) {
+    constructor(options = {}) {
         super();
         this.config = {};
         this.name = 'app';
