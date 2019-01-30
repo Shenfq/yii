@@ -110,8 +110,12 @@ export class Loader {
       ? path.join(this.appDir, this.app.name, 'config/dev')
       : path.join(this.appDir, this.app.name, 'config/prod')
     const configDefPath = path.join(this.appDir, this.app.name, 'config/index')
-    const configEnv = require(configEnvPath).default
-    const configDef = require(configDefPath).default
+
+    let configEnv = null
+    let configDef = null
+    try{ configEnv = require(configEnvPath).default } catch(e) { configEnv = {} }
+    try { configDef = require(configDefPath).default } catch (e) { configDef = {} }
+
     const config = Object.assign(this.app.config, configDef, configEnv, otherConf)
     Object.defineProperty(this.app, 'config', {
       get: () => config
