@@ -27,6 +27,9 @@ export class Loader {
   }
   private getFiles(module: string): Array<FileModule> {
     const dir = path.join(this.appDir, this.app.name, module)
+    if (fs.statSync(dir).isDirectory()) {
+      return []
+    }
     return fs.readdirSync(dir).map((name) => {
       const controllerPath = path.join(dir, name)
       return {
