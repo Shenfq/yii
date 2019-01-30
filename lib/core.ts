@@ -7,7 +7,7 @@ interface Options {
   static?: string
 }
 
-export default class Noo extends Koa {
+export default class Yii extends Koa {
   config: any = {}
   name: string = 'app'
   static: string = 'public'

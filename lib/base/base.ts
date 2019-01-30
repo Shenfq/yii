@@ -1,8 +1,8 @@
 import { BaseContext } from 'koa'
-import Noo from '../core'
+import Yii from '../core'
 export default class BaseClass {
   public ctx: BaseContext
-  public app: Noo
+  public app: Yii
   public config: any
 
   constructor (ctx: BaseContext) {

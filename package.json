@@ -1,5 +1,5 @@
 {
-  "name": "noo",
+  "name": "yii",
   "version": "1.0.0",
   "description": "Node server framework like Yii2, based on koa.",
   "main": "lib/index.ts",
@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Shenfq/Noo.git"
+    "url": "git+https://github.com/Shenfq/yii.git"
   },
   "author": "shenfq",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Shenfq/Noo/issues"
+    "url": "https://github.com/Shenfq/yii/issues"
   },
-  "homepage": "https://github.com/Shenfq/Noo#readme",
+  "homepage": "https://github.com/Shenfq/yii#readme",
   "dependencies": {
     "@types/koa": "^2.0.44",
     "@types/koa-bodyparser": "^4.2.0",

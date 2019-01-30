@@ -1,8 +1,8 @@
-import Noo from '../lib'
+import Yii from '../lib'
 
-const noo = new Noo({
+const yii = new Yii({
   name: 'demo',
   port: 3000
 })
 
-noo.run()
+yii.run()

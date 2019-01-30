@@ -2,7 +2,7 @@ import * as fs from 'fs'
 import * as path from 'path'
 import * as Router from 'koa-router'
 import { BaseContext } from 'koa'
-import Noo from './core'
+import Yii from './core'
 import { action, RouteModule } from './router'
 
 const CACHED = Symbol.for('cached')
@@ -18,7 +18,7 @@ export class Loader {
   private service: Array<FileModule> = []
   private middleware: Array<FileModule> = []
   private component: Array<FileModule> = []
-  private app: Noo
+  private app: Yii
   get appDir() {
     const Idx = __dirname.indexOf('node_module')
     return Idx >= 0
@@ -35,7 +35,7 @@ export class Loader {
       }
     })
   }
-  constructor(app: Noo) {
+  constructor(app: Yii) {
     this.app = app
   }
 

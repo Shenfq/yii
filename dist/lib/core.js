@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const Koa = require("koa");
 const loader_1 = require("./loader");
-class Noo extends Koa {
+class Yii extends Koa {
     constructor(options) {
         super();
         this.config = {};
@@ -19,4 +19,4 @@ class Noo extends Koa {
         return this.listen(port);
     }
 }
-exports.default = Noo;
+exports.default = Yii;
