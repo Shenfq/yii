@@ -1,8 +1,7 @@
 import Yii from '../lib'
 
 const yii = new Yii({
-  name: 'demo',
-  port: 3000
+  name: 'demo'
 })
 
-yii.run()
+yii.run(3000)
